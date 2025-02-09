@@ -1,0 +1,6 @@
+INDEX VERSION 1.131+/Users/igorromantsov/Documents/Coding/eclipse-workspace/.metadata/.plugins/org.eclipse.jdt.core
+3069068799.index
+3817382236.index
+3066378452.index
+2082803594.index
+3791695947.index
