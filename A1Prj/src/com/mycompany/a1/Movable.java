@@ -1,0 +1,57 @@
+package com.mycompany.a1;
+
+
+import com.codename1.charts.models.Point;
+import com.codename1.util.MathUtil;
+
+
+public class Movable extends GameObject{
+	
+	private int heading, speed, foodLevel;
+	
+	public Movable(int size, Point location, int color, int heading, int speed, int foodLevel) {
+		super(size, location, color);
+		this.heading = heading;
+		this.speed = speed;
+		this.foodLevel = foodLevel;
+	}
+
+	
+	public int getHeading() {
+		return heading;
+	}
+	
+	public void setHeading(int heading) {
+		this.heading = heading;
+	}
+	
+	public int getSpeed() {
+		return speed;
+	}
+	
+	public void setSpeed(int speed) {
+		this.speed = speed;
+	}
+	
+	public int getFoodLevel() {
+		return foodLevel;
+	}
+	
+	public void setFoodLevel(int foodLevel) {
+		this.foodLevel = foodLevel;
+	}
+	
+	public void move() {
+		Point oldLocation = getLocation();
+		
+		double theta = Math.toRadians(90 - heading);
+		double deltaX = Math.cos(theta) * speed;
+		double deltaY = Math.sin(theta) * speed;
+		
+		float newX = oldLocation.getX() + (float) deltaX;
+		float newY = oldLocation.getY() + (float) deltaY;
+		
+		Point newLocation = new Point(newX, newY);
+		
+	}
+}

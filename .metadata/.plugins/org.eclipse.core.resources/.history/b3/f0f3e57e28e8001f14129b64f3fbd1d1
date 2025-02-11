@@ -30,7 +30,7 @@ public class GameObject {
 	}
 	
 	
-	public void setLocation(Point newLocation) {
+	public void setLocation(int newLocation) {
 		this.location = newLocation;
 	}
 	public void setColor(int color) {
