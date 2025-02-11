@@ -5,10 +5,23 @@ import java.util.ArrayList;
 
 
 public class GameWorld {
-	public void init() {
-		ArrayList<GameObject> gameObject;
+	
+	private ArrayList<GameObject> gameObject;
+
+	public GameWorld() {
+	}
+	
+	public void init() {		
+		
+		gameObject = new ArrayList<>();
 		
 	}
+	
+	
+	private void addGameObject(GameObject object) {
+		gameObject.add(object);
+	}
+	
 	
 	public void accelerate() {
 		
