@@ -3,6 +3,8 @@ package com.mycompany.a1;
 
 import com.codename1.charts.models.Point;
 import com.codename1.util.MathUtil;
+import com.codename1.charts.util.ColorUtil;
+
 
 
 public class Movable extends GameObject{
@@ -10,7 +12,7 @@ public class Movable extends GameObject{
 	private int heading, speed, foodLevel;
 	
 	public Movable(int size, Point location, int color, int heading, int speed, int foodLevel) {
-		super(size, location, color);
+		super(size,location, color);
 		this.heading = heading;
 		this.speed = speed;
 		this.foodLevel = foodLevel;

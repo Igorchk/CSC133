@@ -55,6 +55,30 @@ private void play() {
 							gw.consumptionRate();
 							break;
 						
+						case '1':
+							gw.flagCollision(1);
+							break;
+							
+						case '2':
+							gw.flagCollision(2);
+							break;
+							
+						case '3':
+							gw.flagCollision(3);
+							break;
+							
+						case '4':
+							gw.flagCollision(4);
+							break;
+							
+						case 'f':
+							gw.foodStationCollision();
+							break;
+							
+						case 'g':
+							gw.spiderCollision();
+							break;
+					
 						case 't':
 							gw.tickedClock();
 							break;

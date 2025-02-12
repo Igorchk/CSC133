@@ -5,6 +5,9 @@
 package com.mycompany.a1;
 
 import com.codename1.charts.models.Point;
+import com.codename1.charts.util.ColorUtil;
+import com.codename1.charts.util.ColorUtil;
+
 
 public class Ant extends Movable implements IFoodie{
 	
@@ -13,12 +16,8 @@ public class Ant extends Movable implements IFoodie{
 	private int healthLevel = 10;
 	private int lastFlagReached = 1;
 	
-	public Ant(int size, Point location, int color, int heading, int speed, int foodLevel, int maximumSpeed, int foodConsumptionRate, int healthLevel, int lastFlagReached) {
+	public Ant(int size, Point location, int color, int heading, int speed, int foodLevel) {
 		super(size, location, color, heading, speed, foodLevel);
-		this.maximumSpeed = maximumSpeed;
-		this.foodConsumptionRate = foodConsumptionRate;
-		this.healthLevel = healthLevel;
-		this.lastFlagReached = lastFlagReached;
 	}
 
 	

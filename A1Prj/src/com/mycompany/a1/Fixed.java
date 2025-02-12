@@ -10,7 +10,6 @@ public class Fixed extends GameObject{
 		super(size, location, color);
 	}
 
-	@Override
 	public void setLocation(Point location) {
 		
 	}

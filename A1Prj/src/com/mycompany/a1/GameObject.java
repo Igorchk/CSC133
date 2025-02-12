@@ -2,6 +2,7 @@ package com.mycompany.a1;
 
 
 import com.codename1.charts.models.Point;
+import com.codename1.charts.util.ColorUtil;
 
 
 public class GameObject {
@@ -25,14 +26,14 @@ public class GameObject {
 		return location;
 	}
 	
+	public void setLocation(int x, int y) {
+		location = new Point(x, y);
+	}
+	
 	public int getColor() {
 		return color;
 	}
 	
-	
-	public void setLocation(Point newLocation) {
-		this.location = newLocation;
-	}
 	public void setColor(int color) {
 		this.color = color;
 	}
