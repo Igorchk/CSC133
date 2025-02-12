@@ -47,7 +47,7 @@ public class Ant extends Movable implements IFoodie{
 	}
 
 	public void setHealthLevel(int healthLevel) {
-		this.healthLevel = healthLevel;
+		this.healthLevel = Math.max(0, healthLevel);
 		checkSpeed();
 	}
 
@@ -67,27 +67,30 @@ public class Ant extends Movable implements IFoodie{
 			if(getSpeed() > getMaximumSpeed()) {
 				setSpeed(maximumSpeed);
 			}
-		}
-		else {
+		}else {
 			setSpeed(0);
 		}
 	}
 	
 	
-	public void accelerate() {
-		int newSpeed = getSpeed() + 1;
+	public void accelerate() {		
 		
-		if(newSpeed < getMaximumSpeed()) {
-			setSpeed(newSpeed);
+		if(getFoodLevel() > 0 && getHealthLevel() > 0) {
+			
+			int newSpeed = getSpeed() + 1;
+			if(newSpeed <= getMaximumSpeed()) {
+				setSpeed(newSpeed);
+			}
+			else {
+				setSpeed(getMaximumSpeed());
+			}
 		}
-		else {
-			setSpeed(getMaximumSpeed());
-		}
-
 	}
 	
 	public void brake() {
-		setSpeed(getSpeed() - 1);
+		if(getSpeed() > 0) {
+			setSpeed(getSpeed() - 1);
+		}
 	}
 	
 	public void turnLeft() {
@@ -96,5 +99,24 @@ public class Ant extends Movable implements IFoodie{
 	
 	public void turnRight() {
 		setHeading(getHeading() + 5);
+	}
+	
+	public void flagCollision(int sequenceNumber) {
+		if((getLastFlagReached() + 1) == sequenceNumber) {
+			setLastFlagReached(sequenceNumber);
+			System.out.println("Your Ant has reached flag " + sequenceNumber);
+		}else {
+			System.out.println("This is the wrong flag please go to flag " + (getLastFlagReached() + 1));
+			}
+	}
+	
+	public void foodStationCollision(int amount) {
+		setFoodLevel(getFoodLevel() + amount);
+	}
+	
+	public void spiderCollision() {
+		if(getHealthLevel() > 0 ){
+			setHealthLevel(getHealthLevel() - 1);
+		}
 	}
 }

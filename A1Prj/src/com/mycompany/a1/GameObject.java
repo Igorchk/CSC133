@@ -5,7 +5,7 @@ import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
 
 
-public class GameObject {
+abstract class GameObject {
 
 	private int size;
 	private Point location;
@@ -26,7 +26,7 @@ public class GameObject {
 		return location;
 	}
 	
-	public void setLocation(int x, int y) {
+	public void setLocation(float x, float y) {
 		location = new Point(x, y);
 	}
 	

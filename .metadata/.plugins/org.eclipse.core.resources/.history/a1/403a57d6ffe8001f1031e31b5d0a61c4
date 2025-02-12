@@ -1,0 +1,11 @@
+package com.mycompany.a1;
+
+public class FoodStation extends Fixed{
+
+	private int consumable;
+	
+	public FoodStation(int size, int location, int color, int consumable) {
+		super(size, location, color);
+		this.consumable = consumable;
+	}
+}

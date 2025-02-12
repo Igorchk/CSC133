@@ -19,6 +19,4 @@ public class Spider extends Movable{
 	public void setFoodLevel(int food) {
 		
 	}
-	
-	
 }

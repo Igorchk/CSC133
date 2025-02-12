@@ -7,7 +7,7 @@ import com.codename1.charts.util.ColorUtil;
 
 
 
-public class Movable extends GameObject{
+abstract class Movable extends GameObject{
 	
 	private int heading, speed, foodLevel;
 	
@@ -53,7 +53,6 @@ public class Movable extends GameObject{
 		float newX = oldLocation.getX() + (float) deltaX;
 		float newY = oldLocation.getY() + (float) deltaY;
 		
-		Point newLocation = new Point(newX, newY);
-		
+		setLocation(newX, newY);		
 	}
 }
