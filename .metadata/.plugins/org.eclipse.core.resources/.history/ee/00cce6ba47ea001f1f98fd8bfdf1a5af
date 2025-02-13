@@ -37,7 +37,6 @@ public class Ant extends Movable implements IFoodie{
 	public void setFoodConsumption(int foodConsumption) {
 		int newFoodLevel = getFoodLevel() - foodConsumption;
 		setFoodLevel(Math.max(0, newFoodLevel));
-		System.out.println("Ant changed food level.\n");
 		if(getFoodLevel() == 0) {
 			setSpeed(0);
 		}

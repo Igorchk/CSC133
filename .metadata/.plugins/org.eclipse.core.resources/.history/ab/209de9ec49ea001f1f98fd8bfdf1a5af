@@ -72,7 +72,7 @@ public class GameWorld {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
 				((Ant) gameObject.get(i)).accelerate();
-				System.out.println("Ant has sped up\n");
+				System.out.println("Ant has sped up");
 			}
 		}
 	}
@@ -81,7 +81,7 @@ public class GameWorld {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
 				((Ant) gameObject.get(i)).brake();
-				System.out.println("Ant has slowed down\n");
+				System.out.println("Ant has slowed down");
 			}
 		}
 	}
@@ -90,7 +90,7 @@ public class GameWorld {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
 				((Ant) gameObject.get(i)).turnLeft();
-				System.out.println("Ant has turned left. Current heading: " + ((Ant) gameObject.get(i)).getHeading() + "\n");
+				System.out.println("Ant has turned left. Current heading: " + ((Ant) gameObject.get(i)).getHeading());
 
 			}
 		}
@@ -100,7 +100,7 @@ public class GameWorld {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
 				((Ant) gameObject.get(i)).turnRight();
-				System.out.println("Ant has turned right. Current heading: " + ((Ant) gameObject.get(i)).getHeading() + "\n");
+				System.out.println("Ant has turned right. Current heading: " + ((Ant) gameObject.get(i)).getHeading());
 			}
 		}
 	}
@@ -159,17 +159,14 @@ public class GameWorld {
 	}
 				
 	public void spiderCollision() {
-		Ant ant = null;
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
-	            ant = (Ant) gameObject.get(i);
-				ant.spiderCollision();
+				((Ant) gameObject.get(i)).spiderCollision();
 				System.out.println("Ant has collided with Spider and lost health!\n");
-				break;
 			}
-		}
-		if(ant != null && ant.getHealthLevel() <= 0) {
-			loseLife();
+			if(((Ant) gameObject.get(i)).getHealthLevel() == 0) {
+				loseLife();
+			}
 		}
 	}
 	
@@ -214,9 +211,9 @@ public class GameWorld {
 		System.out.println("\n");
 	}
 	
-	public void loseLife() {		
+	public void loseLife() {
+		
 		setPlayerLives(getPlayerLives() - 1);
-		System.out.println("Health Reduced, map reset!\n");
 		
 		if(getPlayerLives() == 0) {
 			System.out.println("Game over, you failed!”.");

@@ -72,7 +72,7 @@ public class GameWorld {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
 				((Ant) gameObject.get(i)).accelerate();
-				System.out.println("Ant has sped up\n");
+				System.out.println("Ant has sped up");
 			}
 		}
 	}
@@ -81,7 +81,7 @@ public class GameWorld {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
 				((Ant) gameObject.get(i)).brake();
-				System.out.println("Ant has slowed down\n");
+				System.out.println("Ant has slowed down");
 			}
 		}
 	}
@@ -90,7 +90,7 @@ public class GameWorld {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
 				((Ant) gameObject.get(i)).turnLeft();
-				System.out.println("Ant has turned left. Current heading: " + ((Ant) gameObject.get(i)).getHeading() + "\n");
+				System.out.println("Ant has turned left. Current heading: " + ((Ant) gameObject.get(i)).getHeading());
 
 			}
 		}
@@ -100,7 +100,7 @@ public class GameWorld {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
 				((Ant) gameObject.get(i)).turnRight();
-				System.out.println("Ant has turned right. Current heading: " + ((Ant) gameObject.get(i)).getHeading() + "\n");
+				System.out.println("Ant has turned right. Current heading: " + ((Ant) gameObject.get(i)).getHeading());
 			}
 		}
 	}
@@ -125,51 +125,38 @@ public class GameWorld {
 	}
 	
 	public void foodStationCollision() {
-	    int foodStationFood = 0;
-	    Ant ant = null;
-
-	    for (int i = 0; i < gameObject.size(); i++) {
-	        if (gameObject.get(i) instanceof Ant) {
-	            ant = (Ant) gameObject.get(i);
-	            break;
-	        }
-	    }
-
-	    boolean foundNonEmpty = false;
-
-	    for (int i = 0; i < gameObject.size(); i++) {
-	        if (gameObject.get(i) instanceof FoodStation) {
-	            FoodStation station = (FoodStation) gameObject.get(i);
-
-	            if (station.getCapacity() > 0) {
-	                foodStationFood = station.getCapacity();
-	                station.setCapacity();
-	                foundNonEmpty = true;
-	                break;
-	            }
-	        }
-	    }
-
-	    if (foundNonEmpty) {
-	        ant.foodStationCollision(foodStationFood);
-	        System.out.println("Ant has increased food level.\n");
-	    } else {
-	        System.out.println("All FoodStations have been collected.\n");
-	    }
-	}
-				
-	public void spiderCollision() {
-		Ant ant = null;
+		int foodStationFood = 0;
 		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant) {
-	            ant = (Ant) gameObject.get(i);
-				ant.spiderCollision();
-				System.out.println("Ant has collided with Spider and lost health!\n");
-				break;
+			if(gameObject.get(i) instanceof FoodStation) {
+				FoodStation station = (FoodStation) gameObject.get(i);
+				if(station.getCapacity() > 0) {
+					foodStationFood = station.getCapacity();
+					station.setCapacity();
+					break;
+				}else if(foodStationFood != 0) {
+					for(int j = 0; j < gameObject.size() - 1; j++) {
+						if(gameObject.get(i) instanceof Ant) {
+							((Ant) gameObject.get(i)).foodStationCollision(foodStationFood);
+						}
+					}
+				}
+				else {
+					System.out.println("All FoodStations have been collected");
+				}
+				
 			}
 		}
-		if(ant != null && ant.getHealthLevel() <= 0) {
-			loseLife();
+	}
+	
+	public void spiderCollision() {
+		for(int i = 0; i < gameObject.size(); i++) {
+			if(gameObject.get(i) instanceof Ant) {
+				((Ant) gameObject.get(i)).spiderCollision();
+				System.out.println("Ant has collided with Spider and lost health!\n");
+			}
+			if(((Ant) gameObject.get(i)).getHealthLevel() == 0) {
+				loseLife();
+			}
 		}
 	}
 	
@@ -214,9 +201,9 @@ public class GameWorld {
 		System.out.println("\n");
 	}
 	
-	public void loseLife() {		
+	public void loseLife() {
+		
 		setPlayerLives(getPlayerLives() - 1);
-		System.out.println("Health Reduced, map reset!\n");
 		
 		if(getPlayerLives() == 0) {
 			System.out.println("Game over, you failed!”.");

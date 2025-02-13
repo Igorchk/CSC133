@@ -37,7 +37,7 @@ public class Ant extends Movable implements IFoodie{
 	public void setFoodConsumption(int foodConsumption) {
 		int newFoodLevel = getFoodLevel() - foodConsumption;
 		setFoodLevel(Math.max(0, newFoodLevel));
-		System.out.println("Ant changed food level.\n");
+		System.out.println("Ant has increased food level.\n");
 		if(getFoodLevel() == 0) {
 			setSpeed(0);
 		}
@@ -116,8 +116,10 @@ public class Ant extends Movable implements IFoodie{
 	}
 	
 	public void spiderCollision() {
+		System.out.println("Ant health before reduction: " + getHealthLevel());
 		if(getHealthLevel() > 0 ){
 			setHealthLevel(getHealthLevel() - 1);
+			System.out.println("Ant health after reduction: " + getHealthLevel());
 		}
 	}
 	
