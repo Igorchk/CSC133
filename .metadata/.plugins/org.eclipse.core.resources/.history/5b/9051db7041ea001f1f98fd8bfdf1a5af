@@ -133,8 +133,6 @@ public class GameWorld {
 					foodStationFood = station.getCapacity();
 					station.setCapacity();
 					break;
-				}else {
-					System.out.println("All FoodStations have been collected!");
 				}
 			}
 		}

@@ -131,10 +131,7 @@ public class GameWorld {
 				FoodStation station = (FoodStation) gameObject.get(i);
 				if(station.getCapacity() > 0) {
 					foodStationFood = station.getCapacity();
-					station.setCapacity();
 					break;
-				}else {
-					System.out.println("All FoodStations have been collected!");
 				}
 			}
 		}

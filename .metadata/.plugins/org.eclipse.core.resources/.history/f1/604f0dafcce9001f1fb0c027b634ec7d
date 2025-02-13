@@ -71,7 +71,7 @@ public class Ant extends Movable implements IFoodie{
 			setSpeed(0);
 		}
 	}
-
+	
 	
 	public void accelerate() {		
 		

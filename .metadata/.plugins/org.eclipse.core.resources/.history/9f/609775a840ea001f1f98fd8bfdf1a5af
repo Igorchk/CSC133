@@ -114,14 +114,11 @@ public class GameWorld {
 			if(gameObject.get(i) instanceof Ant) {
 				((Ant) gameObject.get(i)).flagCollision(sequenceNumber);
 			}
-		}
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant && ((Ant) gameObject.get(i)).getLastFlagReached() == 4) {
-			System.out.println("Game over, you win! Total time: " + getGameTick());
-			System.exit(0);
+			if(((Ant) gameObject.get(i)).getLastFlagReached() == 4) {
+				System.out.println("Game over, you win! Total time: " + getGameTick());
+				System.exit(0);
 			}
 		}
-		
 	}
 	
 	public void foodStationCollision() {
@@ -131,10 +128,7 @@ public class GameWorld {
 				FoodStation station = (FoodStation) gameObject.get(i);
 				if(station.getCapacity() > 0) {
 					foodStationFood = station.getCapacity();
-					station.setCapacity();
 					break;
-				}else {
-					System.out.println("All FoodStations have been collected!");
 				}
 			}
 		}
