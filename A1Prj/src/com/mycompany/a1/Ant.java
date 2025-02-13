@@ -119,4 +119,12 @@ public class Ant extends Movable implements IFoodie{
 			setHealthLevel(getHealthLevel() - 1);
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return "Ant: loc=" + Math.round(getLocation().getX() * 100)/100.0f + ", " + Math.round(getLocation().getY()* 100)/100.0f + 
+				" color=[" + ColorUtil.red(getColor()) + "," + ColorUtil.green(getColor()) + "," + ColorUtil.blue(getColor()) + 
+				"] heading=" + getHeading() + " speed=" + getSpeed() + " size=" + getSize() +
+				" maxSpeed=" + getMaximumSpeed() + " foodConsumptionRate=" + 2;
+	}
 }

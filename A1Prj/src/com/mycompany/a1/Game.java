@@ -10,13 +10,25 @@ import java.lang.String;
 
 
 public class Game extends Form{
+	
 	private GameWorld gw;
+	
+	private boolean exitCommand = false;
+	
 	public Game() {
 		gw = new GameWorld();
 		gw.init();
 		play();
 }
+	public boolean getExitCommand() {
+		return exitCommand;
+	}
+	
+	public void setExitCommand(boolean command) {
+		this.exitCommand = command;
+	}
 
+	
 private void play() {
 	
 	Label myLabel=new Label("Enter a Command:");
@@ -32,6 +44,8 @@ private void play() {
 				String sCommand = myTextField.getText().toString();
 				myTextField.clear();
 				if(sCommand.length() != 0)
+					
+					
 					
 					switch (sCommand.charAt(0)) {
 						
@@ -92,23 +106,29 @@ private void play() {
 							break;
 						
 						case 'x':
-							gw.exit();
+							System.out.println("Please Enter Y or N to confirm.\n");
+							setExitCommand(true);
 							break;
 						
 						case 'y':
-							gw.yes();
-							break;
+							if(getExitCommand()) {
+								System.out.println("Game Closing.\n");
+								System.exit(0);
+							}else {
+								break;
+							}
 						
 						case 'n':
-							gw.no();
+							setExitCommand(false);
+							System.out.println("Game Continuing.\n");
 							break;
 						
 						default:
-							System.out.println("Please enter a valid input");
+							System.out.println("Please enter a valid input.\n");
 						//add code to handle rest of the commands
 					} //switch
-		} //actionPerformed
-		} //new ActionListener()
-		); //addActionListener
-		} //play
+				} //actionPerformed
+			} //new ActionListener()
+			); //addActionListener
+	} //play
 }
