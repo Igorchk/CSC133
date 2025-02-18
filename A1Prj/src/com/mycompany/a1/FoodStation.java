@@ -12,14 +12,30 @@ public class FoodStation extends Fixed{
 		this.capacity = size;
 	}
 
+	/*
+	 * Getter for capacity
+	 */
 	public int getCapacity() {
 		return capacity;
 	}
 	
+	/*
+	 * Setter for capacity
+	 */
 	public void setCapacity( ) {
 		this.capacity = 0;
 	}
+	
+	/*
+	 * Overrides parents method to change color
+	 */
+	@Override
+	public void setColor(int color) {	
+	}
 
+	/*
+	 * Returns current stats for FoodStation
+	 */
 	@Override
 	public String toString() {
 		return "FoodStation: loc=" + Math.round(getLocation().getX() * 100)/100.0f + ", " + Math.round(getLocation().getY()* 100)/100.0f + 

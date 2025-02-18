@@ -1,0 +1,269 @@
+package com.mycompany.a1;
+
+
+import com.codename1.charts.models.Point;
+import com.codename1.charts.util.ColorUtil;
+import java.util.Random;
+import java.util.ArrayList;
+
+
+/**
+ * The GameWorld class manages all game objects, state, and game logic.
+ */
+public class GameWorld {
+	
+	//Creates a list that will store all Game Objects
+	private ArrayList<GameObject> gameObject;
+	
+	//Creates 'rand' for random number generation 
+	private Random rand = new Random();
+	
+	//Creates counter for game time
+	private int gameTick = 0;
+	
+	//Creates players lives, and sets to 3
+	private int playerLives = 3;
+	
+	/**
+	 * Default constructor for GameWorld.
+	 */
+	public GameWorld() {
+	}
+	
+	/**
+	 * Initializes all game objects and adds them to the list.
+	 */
+	public void init() {		
+		
+		//Creates ArrayList<> for all game objects to be stored
+		gameObject = new ArrayList<>();
+		
+		//Creates 4 flags and assigns size of 25, predefined locations, color blue, and sequence numbers accordingly
+		gameObject.add(new Flag(25, new Point(100,100), ColorUtil.rgb(0, 0, 255), 1));
+		gameObject.add(new Flag(25, new Point(900,100), ColorUtil.rgb(0, 0, 255), 2));
+		gameObject.add(new Flag(25, new Point(100,900), ColorUtil.rgb(0, 0, 255), 3));
+		gameObject.add(new Flag(25, new Point(900,900), ColorUtil.rgb(0, 0, 255), 4));
+
+		//Create object Ant and assigns size of 25, predefined start location, color grey, heading direction of 0, speed of 1, and initial foodLevel 25
+		gameObject.add(new Ant(25, new Point(50, 50), ColorUtil.rgb(128,128,128), 0, 1, 25));
+		
+		//Creates 2 Spiders with size 25, random location, color black, random heading, speed of 5, and foodLevel 100 (won't be using)
+		gameObject.add(new Spider(25, new Point(rand.nextInt(1000), rand.nextInt(1000)), ColorUtil.rgb(255, 255, 255), rand.nextInt(360), 5, 100));
+		gameObject.add(new Spider(25, new Point(rand.nextInt(1000), rand.nextInt(1000)), ColorUtil.rgb(255, 255, 255), rand.nextInt(360), 5, 100));
+		
+		//Creates 2 FoodStations with random size, random location, color green, capacity is proportional to size so it will be set in the class
+		gameObject.add(new FoodStation(rand.nextInt(41) + 10, new Point(rand.nextInt(1000), rand.nextInt(1000)), ColorUtil.rgb(0, 255, 0)));
+		gameObject.add(new FoodStation(rand.nextInt(41) + 10, new Point(rand.nextInt(1000), rand.nextInt(1000)), ColorUtil.rgb(0, 255, 0)));
+	}
+	
+	
+	//Getter for gameTick
+	public int getGameTick() {
+		return gameTick;
+	}
+	
+	//Setter for gameTick
+	public void setGameTick(int amount) {
+		gameTick = amount;
+	}
+	
+	//Getter for playerLives
+	public int getPlayerLives() {
+		return playerLives;
+	}
+	
+	//Setter for playerLives
+	public void setPlayerLives(int amount) {
+		playerLives = amount;
+	}
+	
+	
+	/**
+	 * Handles acceleration of the Ant.
+	 */
+	public void accelerate() {
+		for(int i = 0; i < gameObject.size(); i++) {//Cycles through all game objects
+			if(gameObject.get(i) instanceof Ant) {//Checks if the current gameObject is an Ant, if so proceeds
+				((Ant) gameObject.get(i)).accelerate();//Accelerates Ant
+				System.out.println("Ant has sped up\n");
+			}
+		}
+	}
+	
+	/**
+	 * Handles braking of the Ant.
+	 */
+	public void brake() {
+		for(int i = 0; i < gameObject.size(); i++) {
+			if(gameObject.get(i) instanceof Ant) {
+				((Ant) gameObject.get(i)).brake();
+				System.out.println("Ant has slowed down\n");
+			}
+		}
+	}
+	
+	/**
+	 * Handles turning left.
+	 */
+	public void turnLeft() {
+		for(int i = 0; i < gameObject.size(); i++) {
+			if(gameObject.get(i) instanceof Ant) {
+				((Ant) gameObject.get(i)).turnLeft();	
+				System.out.println("Ant has turned left. Current heading: " + ((Ant) gameObject.get(i)).getHeading() + "\n");
+
+			}
+		}
+	}
+	
+	/**
+	 * Handles turning right.
+	 */
+	public void turnRight() {
+		for(int i = 0; i < gameObject.size(); i++) {
+			if(gameObject.get(i) instanceof Ant) {
+				((Ant) gameObject.get(i)).turnRight();
+				System.out.println("Ant has turned right. Current heading: " + ((Ant) gameObject.get(i)).getHeading() + "\n");
+			}
+		}
+	}
+	
+	//Sets the consumption rate of Ant to a random value between 1-3
+	public void consumptionRate() {
+		
+	}
+	
+	//Attempts to set Ant's lastFlag to users input
+	public void flagCollision(int sequenceNumber) {
+		for(int i = 0; i < gameObject.size(); i++) {
+			if(gameObject.get(i) instanceof Ant) {
+				((Ant) gameObject.get(i)).flagCollision(sequenceNumber);
+			}
+		}
+		for(int i = 0; i < gameObject.size(); i++) {
+			if(gameObject.get(i) instanceof Ant && ((Ant) gameObject.get(i)).getLastFlagReached() == 4) {
+				System.out.println("Game over, you win! Total time: " + getGameTick());
+				System.exit(0);
+			}
+		}
+		
+	}
+	
+	/**
+	 * Handles food station collision.
+	 */
+	public void foodStationCollision() {
+	    int foodStationFood = 0;
+	    Ant ant = null;
+
+	    for (int i = 0; i < gameObject.size(); i++) {
+	        if (gameObject.get(i) instanceof Ant) {
+	            ant = (Ant) gameObject.get(i);
+	            break;
+	        }
+	    }
+
+	    boolean foundNonEmpty = false;
+
+	    for (int i = 0; i < gameObject.size(); i++) {
+	        if (gameObject.get(i) instanceof FoodStation) {
+	            FoodStation station = (FoodStation) gameObject.get(i);
+
+	            if (station.getCapacity() > 0) {
+	                foodStationFood = station.getCapacity();
+	                station.setCapacity();
+	                foundNonEmpty = true;
+	                break;
+	            }
+	        }
+	    }
+
+	    if (foundNonEmpty) {
+	        ant.foodStationCollision(foodStationFood);
+	        System.out.println("Ant has increased food level.\n");
+	    } else {
+	        System.out.println("All FoodStations have been collected.\n");
+	    }
+	}
+
+	/*
+	 * Tells ant it collided with a spider.
+	 */
+	public void spiderCollision() {
+		Ant ant = null;
+		for(int i = 0; i < gameObject.size(); i++) {
+			if(gameObject.get(i) instanceof Ant) {
+	            ant = (Ant) gameObject.get(i);
+				ant.spiderCollision();
+				System.out.println("Ant has collided with Spider and lost health!\n");
+				break;
+			}
+		}
+		if(ant != null && ant.getHealthLevel() <= 0) {
+			loseLife();
+		}
+	}
+	
+	/*
+	 * Tells game clocked has ticked. Movable objects make their next move. Ant has stats adjusted. 
+	 */
+	public void tickedClock() {
+		for(int i = 0; i < gameObject.size(); i++) {
+			if(gameObject.get(i) instanceof Spider) {
+				((Spider) gameObject.get(i)).move();
+			}
+		}
+		for(int i = 0; i < gameObject.size(); i++) {
+			if(gameObject.get(i) instanceof Ant) {
+				Ant ant = (Ant) gameObject.get(i);
+				ant.move();
+				ant.setFoodConsumption(1);
+			if(ant.getFoodLevel() == 0) {
+				System.out.println("Food Level is 0, you lost a life. Map Reset.\n");
+				loseLife();
+			}
+		}
+	}
+		System.out.println("Game Clock has Ticked.\n");
+		gameTick += 1;
+	}
+	
+	/*
+	 * Displays Ant current stats
+	 */
+	public void showDisplay() {
+		for(int i = 0; i < gameObject.size(); i++) {
+			if(gameObject.get(i) instanceof Ant) {
+				Ant ant = ((Ant) gameObject.get(i));
+				System.out.println("Current Lives Left: " + getPlayerLives());
+				System.out.println("Current Elapsed Time: " + getGameTick());
+				System.out.println("Current Highest Flag Reached " + ant.getLastFlagReached());
+				System.out.println("Current Food Level: " + ant.getFoodLevel());
+				System.out.println("Current Health Level: " + ant.getHealthLevel() + "\n");
+			}
+		}
+	}
+	
+	/*
+	 * Displays all objects location and their stats
+	 */
+	public void showMap() {
+		for(int i = 0; i < gameObject.size(); i++) {
+			System.out.println(gameObject.get(i).toString());
+		}
+		System.out.println("\n");
+	}
+	
+	/*
+	 * 
+	 */
+	public void loseLife() {		
+		setPlayerLives(getPlayerLives() - 1);
+		System.out.println("Health Reduced, map reset!\n");
+		
+		if(getPlayerLives() == 0) {
+			System.out.println("Game over, you failed!”.");
+		}
+		
+		init();
+	}
+}

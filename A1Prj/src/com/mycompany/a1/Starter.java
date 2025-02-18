@@ -46,14 +46,17 @@ public class Starter {
         });        
     }
     
+    //Starts the virtual app and shows display
     public void start() {
     	if(current != null){
     		current.show();
     		return;
     		}
+    	//Initiates a new instance of Game()
     	new Game();
     	}
 
+    
     public void stop() {
         current = getCurrentForm();
         if(current instanceof Dialog) {

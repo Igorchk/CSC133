@@ -18,31 +18,51 @@ abstract class Movable extends GameObject{
 		this.foodLevel = foodLevel;
 	}
 
-	
+	/*
+	 * Returns objects current heading
+	 */
 	public int getHeading() {
 		return heading;
 	}
 	
+	/*
+	 * Setter objects heading
+	 */
 	public void setHeading(int heading) {
 		this.heading = heading;
 	}
 	
+	/*
+	 * Returns objects current speed
+	 */
 	public int getSpeed() {
 		return speed;
 	}
 	
+	/*
+	 * Setter objects speed
+	 */
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
 	
+	/*
+	 * Returns objects current foodLevel
+	 */
 	public int getFoodLevel() {
 		return foodLevel;
 	}
 	
+	/*
+	 * Setter objects foodLevel
+	 */
 	public void setFoodLevel(int foodLevel) {
 		this.foodLevel = foodLevel;
 	}
 	
+	/*
+	 * Adjusts objects location based on heading, location, and speed
+	 */
 	public void move() {
 		Point oldLocation = getLocation();
 		

@@ -12,10 +12,23 @@ public class Flag extends Fixed{
 		this.sequenceNumber = sequenceNumber;
 	}
 	
+	/*
+	 * Setter for sequenceNumber
+	 */
 	public int getSequenceNumber() {
 		return sequenceNumber;
 	}
 	
+	/*
+	 * Overrides parents method to change color
+	 */
+	@Override
+	public void setColor(int color) {	
+	}
+	
+	/*
+	 * Returns current stats of Flag
+	 */
 	@Override
 	public String toString() {
 		return "Flag: loc=" + Math.round(getLocation().getX() * 100)/100.0f + ", " + Math.round(getLocation().getY()* 100)/100.0f + 

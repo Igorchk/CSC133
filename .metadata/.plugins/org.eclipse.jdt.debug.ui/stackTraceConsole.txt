@@ -1,0 +1,34 @@
+public void foodStationCollision() {
+    int foodStationFood = 0;
+    int allEmptyCounter = 0;
+    boolean foundNonEmpty = false;
+    
+    for (int i = 0; i < gameObject.size(); i++) {
+        if (gameObject.get(i) instanceof FoodStation) {
+            FoodStation station = (FoodStation) gameObject.get(i);
+
+            if (station.getCapacity() > 0) { // Collect food if station has capacity
+                foodStationFood = station.getCapacity();
+                station.setCapacity(); // Set capacity to 0 after collection
+                foundNonEmpty = true;
+                break;
+            } else {
+                allEmptyCounter++; // Track empty stations
+            }
+        }
+    }
+
+    if (allEmptyCounter == gameObject.size()) { 
+        System.out.println("All FoodStations have been collected.");
+    } else if (foundNonEmpty) {
+        System.out.println("Food collected from FoodStation.");
+    }
+
+    for (int i = 0; i < gameObject.size(); i++) {
+        if (gameObject.get(i) instanceof Ant) {
+            ((Ant) gameObject.get(i)).foodStationCollision(foodStationFood);
+            System.out.println("Ant has increased food level.\n");
+            break; // Ensure only one Ant gets food
+        }
+    }
+}

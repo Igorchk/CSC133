@@ -4,29 +4,28 @@ package com.mycompany.a1;
 import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
 import java.util.Random;
-
-
-
 import java.util.ArrayList;
 
 
+/*
+ * The GameWorld class manages all game objects, state, and game logic.
+ */
 public class GameWorld {
 	
-	//Creates a list that will store all Game Objects
 	private ArrayList<GameObject> gameObject;
-	
-	//Creates 'rand' for random number generation 
 	private Random rand = new Random();
-	
-	//Creates counter for game time
 	private int gameTick = 0;
-	
-	//Creates players lives, and sets to 3
 	private int playerLives = 3;
 	
+	/*
+	 * Default constructor for GameWorld.
+	 */
 	public GameWorld() {
 	}
 	
+	/*
+	 * Initializes all game objects and adds them to the list.
+	 */
 	public void init() {		
 		
 		//Creates ArrayList<> for all game objects to be stored
@@ -50,33 +49,55 @@ public class GameWorld {
 		gameObject.add(new FoodStation(rand.nextInt(41) + 10, new Point(rand.nextInt(1000), rand.nextInt(1000)), ColorUtil.rgb(0, 255, 0)));
 	}
 	
-	
+	/*
+	 * Returns for current game time, gameTick
+	 */
 	public int getGameTick() {
 		return gameTick;
 	}
 	
+	/*
+	 * Setter for gameTick
+	 */
 	public void setGameTick(int amount) {
 		gameTick = amount;
 	}
 	
+	/*
+	 * Returns for number of player lives left, playerLives
+	 */
 	public int getPlayerLives() {
 		return playerLives;
 	}
 	
+	/*
+	 * Setter for playerLives 
+	 */
 	public void setPlayerLives(int amount) {
 		playerLives = amount;
 	}
 	
 	
+	/*
+	 * Handles acceleration of Ant.
+	 * Looks for Ant object and calls on method
+	 */
 	public void accelerate() {
+		//Cycles through all game objects
 		for(int i = 0; i < gameObject.size(); i++) {
+			//Checks if the current gameObject is an Ant, if so proceeds
 			if(gameObject.get(i) instanceof Ant) {
+				//Accelerates Ant
 				((Ant) gameObject.get(i)).accelerate();
 				System.out.println("Ant has sped up\n");
 			}
 		}
 	}
 	
+	/*
+	 * Handles braking of the Ant.
+	 * Looks for Ant object and calls on method
+	 */
 	public void brake() {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
@@ -86,16 +107,24 @@ public class GameWorld {
 		}
 	}
 	
+	/*
+	 * Handles turning left.
+	 * Looks for Ant object and calls on method
+	 */
 	public void turnLeft() {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
-				((Ant) gameObject.get(i)).turnLeft();
+				((Ant) gameObject.get(i)).turnLeft();	
 				System.out.println("Ant has turned left. Current heading: " + ((Ant) gameObject.get(i)).getHeading() + "\n");
 
 			}
 		}
 	}
 	
+	/*
+	 * Handles turning right.
+	 * Looks for Ant object and calls on method
+	 */
 	public void turnRight() {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
@@ -104,11 +133,23 @@ public class GameWorld {
 			}
 		}
 	}
-	
+	/*
+	 * Sets the consumption rate of Ant to a random value between 1-3
+	 */
 	public void consumptionRate() {
-		
+		int randFood = rand.nextInt(3) + 1;
+		for(int i = 0; i < gameObject.size(); i++) {
+			if(gameObject.get(i) instanceof Ant) {
+				((Ant) gameObject.get(i)).setFoodConsumption(randFood);
+				System.out.println("Ant's food set to: " + randFood);
+			}
+		}
 	}
 	
+	/*
+	 * Tells Ant current flagReached, if flag not next in sequence
+	 * return next flag needed to be reached
+	 */
 	public void flagCollision(int sequenceNumber) {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
@@ -117,16 +158,23 @@ public class GameWorld {
 		}
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant && ((Ant) gameObject.get(i)).getLastFlagReached() == 4) {
-			System.out.println("Game over, you win! Total time: " + getGameTick());
-			System.exit(0);
+				System.out.println("Game over, you win! Total time: " + getGameTick());
+				System.exit(0);
 			}
 		}
 		
 	}
 	
+	/*
+	 * Handles food station collision.
+	 * Looks for non-empty foodStation object
+	 * Once found, calls on Ant to update foodLevel
+	 * If not returns no stations found
+	 */
 	public void foodStationCollision() {
 	    int foodStationFood = 0;
 	    Ant ant = null;
+	    boolean foundNonEmpty = false;
 
 	    for (int i = 0; i < gameObject.size(); i++) {
 	        if (gameObject.get(i) instanceof Ant) {
@@ -134,8 +182,6 @@ public class GameWorld {
 	            break;
 	        }
 	    }
-
-	    boolean foundNonEmpty = false;
 
 	    for (int i = 0; i < gameObject.size(); i++) {
 	        if (gameObject.get(i) instanceof FoodStation) {
@@ -157,7 +203,10 @@ public class GameWorld {
 	        System.out.println("All FoodStations have been collected.\n");
 	    }
 	}
-				
+
+	/*
+	 * Tells Ant it collided with a Spider.
+	 */
 	public void spiderCollision() {
 		Ant ant = null;
 		for(int i = 0; i < gameObject.size(); i++) {
@@ -173,6 +222,11 @@ public class GameWorld {
 		}
 	}
 	
+	/*
+	 * Tells game clock has ticked. 
+	 * Movable objects make their next move. 
+	 * Ant has stats adjusted. 
+	 */
 	public void tickedClock() {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Spider) {
@@ -194,6 +248,9 @@ public class GameWorld {
 		gameTick += 1;
 	}
 	
+	/*
+	 * Displays Ant's current stats
+	 */
 	public void showDisplay() {
 		for(int i = 0; i < gameObject.size(); i++) {
 			if(gameObject.get(i) instanceof Ant) {
@@ -207,6 +264,9 @@ public class GameWorld {
 		}
 	}
 	
+	/*
+	 * Displays all objects location and their map stats
+	 */
 	public void showMap() {
 		for(int i = 0; i < gameObject.size(); i++) {
 			System.out.println(gameObject.get(i).toString());
@@ -214,6 +274,10 @@ public class GameWorld {
 		System.out.println("\n");
 	}
 	
+	/*
+	 * Reduces Ant's life by one. 
+	 * Ends game if no lives left
+	 */
 	public void loseLife() {		
 		setPlayerLives(getPlayerLives() - 1);
 		System.out.println("Health Reduced, map reset!\n");

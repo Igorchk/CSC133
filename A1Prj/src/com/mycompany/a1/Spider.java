@@ -13,16 +13,27 @@ public class Spider extends Movable{
 		super(size, location, color, heading, speed, foodLevel);
 	}
 	
+	/*
+	 * Overrides parent method to not have Spider's color changed once set
+	 */
 	@Override
 	public void setColor(int color) {
 		
 	}
 	
+	/*
+	 * Overrides parent method to not have Spider's food level changed once set
+	 */
 	@Override
 	public void setFoodLevel(int food) {
 		
 	}
 	
+	/*
+	 * Adjusts objects location based on heading, location, and speed.
+	 * Checks for borders, if border crossed adjusts heading and sets
+	 * object to stay in bounds
+	 */
 	@Override
 	public void move() {
 		Point oldLocation = getLocation();
@@ -46,6 +57,9 @@ public class Spider extends Movable{
 		setLocation(newX, newY);
 	}
 	
+	/*
+	 * Returns Spider's current stats
+	 */
 	@Override
 	public String toString() {
 		return "Spider: loc=" + Math.round(getLocation().getX() * 100)/100.0f + ", " + Math.round(getLocation().getY()* 100)/100.0f + 

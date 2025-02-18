@@ -10,10 +10,16 @@ abstract class Fixed extends GameObject{
 		super(size, location, color);
 	}
 
+	/*
+	 * Setter for Location
+	 */
 	public void setLocation(Point location) {
 		
 	}
 	
+	/*
+	 * Setter for Size
+	 */
 	public void setSize() {
 		
 	}
