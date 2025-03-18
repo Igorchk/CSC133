@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
-    <fullyQualifiedTypeName name="java.util.Random"/>
     <fullyQualifiedTypeName name="java.util.Observable"/>
     <fullyQualifiedTypeName name="com.codename1.ui.layouts.BorderLayout"/>
     <fullyQualifiedTypeName name="com.codename1.ui.Container"/>
@@ -14,5 +13,11 @@
     <fullyQualifiedTypeName name="com.codename1.ui.Label"/>
     <fullyQualifiedTypeName name="com.codename1.ui.Toolbar"/>
     <fullyQualifiedTypeName name="com.codename1.ui.Command"/>
+    <fullyQualifiedTypeName name="com.codename1.ui.events.ActionListener"/>
+    <fullyQualifiedTypeName name="com.codename1.ui.events.ActionEvent"/>
+    <fullyQualifiedTypeName name="com.codename1.ui.TextField"/>
     <fullyQualifiedTypeName name="com.codename1.ui.Dialog"/>
+    <fullyQualifiedTypeName name="com.codename1.ui.Display"/>
+    <fullyQualifiedTypeName name="com.codename1.ui.CheckBox"/>
+    <fullyQualifiedTypeName name="java.util.Random"/>
 </qualifiedTypeNameHistroy>

@@ -75,4 +75,17 @@ abstract class Movable extends GameObject{
 		
 		setLocation(newX, newY);		
 	}
+	
+	public void move(int x, int y) {
+		Point oldLocation = getLocation();
+		
+		double theta = Math.toRadians(90 - heading);
+		double deltaX = Math.cos(theta) * speed;
+		double deltaY = Math.sin(theta) * speed;
+		
+		float newX = oldLocation.getX() + (float) deltaX;
+		float newY = oldLocation.getY() + (float) deltaY;
+		
+		setLocation(newX, newY);		
+	}
 }

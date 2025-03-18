@@ -19,7 +19,6 @@ public class MapView extends Container implements Observer{
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("MapView");
 	}
 	
 }

@@ -7,9 +7,11 @@ public class Flag extends Fixed{
 
 	private int sequenceNumber;
 	
-	public Flag(int size, Point location, int color, int sequenceNumber) {
-		super(size, location, color);
+	public Flag(Point location, int sequenceNumber) {
+		
+		super(25, location, ColorUtil.rgb(0, 0, 255));
 		this.sequenceNumber = sequenceNumber;
+		
 	}
 	
 	/*

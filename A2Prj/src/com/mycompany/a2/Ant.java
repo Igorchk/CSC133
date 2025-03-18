@@ -3,6 +3,7 @@ package com.mycompany.a2;
 
 import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
+import com.codename1.ui.Dialog;
 import com.codename1.charts.util.ColorUtil;
 
 
@@ -12,11 +13,28 @@ public class Ant extends Movable implements IFoodie{
 	private int foodConsumptionRate = 1;
 	private int healthLevel = 10;
 	private int lastFlagReached = 1;
+	private static Ant theAnt;
 	
-	public Ant(int size, Point location, int color, int heading, int speed, int foodLevel) {
+	private Ant(int size, Point location, int color, int heading, int speed, int foodLevel) {
 		super(size, location, color, heading, speed, foodLevel);
 	}
 
+	public static Ant getAnt() {
+		if (theAnt == null) {
+			theAnt = new Ant(25, new Point(50, 50), ColorUtil.rgb(128,128,128), 0, 1, 25);
+		}
+		return theAnt;
+	}
+	
+	public void resetAnt() {
+	    setLocation(50,50);
+		setHealthLevel(10);
+	    setFoodLevel(25);
+	    setHeading(0);
+	    setSpeed(1);
+	    setLastFlagReached(1);
+	}
+	
 	/*
 	 * Overrides parents method to change color
 	 */
@@ -148,9 +166,9 @@ public class Ant extends Movable implements IFoodie{
 	public void flagCollision(int sequenceNumber) {
 		if((getLastFlagReached() + 1) == sequenceNumber) {
 			setLastFlagReached(sequenceNumber);
-			System.out.println("Your Ant has reached flag " + sequenceNumber);
+			System.out.println("Your Ant has reached flag " + sequenceNumber + "\n");
 		}else {
-			System.out.println("This is the wrong flag please go to flag " + (getLastFlagReached() + 1));
+            Dialog.show("Error", "Wrong Flag", "OK", null);
 			}
 	}
 	

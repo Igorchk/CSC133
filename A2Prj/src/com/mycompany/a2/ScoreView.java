@@ -32,12 +32,12 @@ public class ScoreView extends Container implements Observer{
 		this.setLayout(new BoxLayout(BoxLayout.Y_AXIS));
 		Container northContainer = new Container(new FlowLayout(Component.CENTER));
 		
-		timeLabel = new Label("Time: 0" );
-		livesLabel = new Label("Lives left: 3");
-		lastFlagLabel = new Label("Last Flag Reached: 1");
-		foodLabel = new Label("Food Level: 25");
-		healthLabel = new Label("Health Level: 10");
-		soundLabel = new Label("Sound: Off");
+		timeLabel = createLabel("Time: 0" );
+		livesLabel = createLabel("Lives Left: 3");
+		lastFlagLabel = createLabel("Last Flag Reached: 1");
+		foodLabel = createLabel("Food Level: 25");
+		healthLabel = createLabel("Health Level: 10");
+		soundLabel = createLabel("Sound: OFF");
 		
 		northContainer.add(timeLabel);
 		northContainer.add(livesLabel);
@@ -49,19 +49,26 @@ public class ScoreView extends Container implements Observer{
 		this.add(northContainer);
 	}
 	
+	public Label createLabel(String text) {
+		Label label = new Label(text);
+		label.getAllStyles().setPadding(1, 1, 2, 2);
+		
+		return label;
+	}
 	@Override
 	public void update(Observable o, Object arg) {
-		if (o instanceof GameWorld) {
-			GameWorld gw = (GameWorld) o;
-			
-			timeLabel.setText("Time: " + gw.getGameTick());
-			livesLabel.setText("Lives Left: " + gw.getPlayerLives());
-			lastFlagLabel.setText("Last Flag Reacehd: " + gw.getLastFlag());
-			foodLabel.setText("Food Level: " + gw.getFoodLevel());
-			healthLabel.setText("Health Level: " + gw.getHealthLevel());
-			soundLabel.setText("Sound: " + gw.getSound());
-			
-		}
+	    if (o instanceof GameWorld) {
+	        GameWorld gw = (GameWorld) o;
+
+	        timeLabel.setText("Time: " + gw.getGameTick());
+	        livesLabel.setText("Lives Left: " + gw.getPlayerLives());
+	        lastFlagLabel.setText("Last Flag Reached: " + gw.getLastFlag());
+	        foodLabel.setText("Food Level: " + gw.getFoodLevel());
+	        healthLabel.setText("Health Level: " + gw.getHealthLevel());
+	        soundLabel.setText("Sound: " + gw.getSound());
+
+	        this.revalidate();
+	        this.repaint();
+	    }
 	}
-	
 }

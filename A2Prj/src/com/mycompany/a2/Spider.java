@@ -7,10 +7,14 @@ import com.codename1.charts.util.ColorUtil;
 
 public class Spider extends Movable{
 
-	private Random rand = new Random();
+	private static Random rand = new Random();
+	private int absolX;
+	private int absolY;
 	
-	public Spider(int size, Point location, int color, int heading, int speed, int foodLevel) {
-		super(size, location, color, heading, speed, foodLevel);
+	public Spider(Point location, int absolX, int absolY) {
+		super(25, location, ColorUtil.rgb(255, 255, 255), rand.nextInt(360), 5, 100);
+		this.absolX = absolX;
+		this.absolY = absolY;
 	}
 	
 	/*
@@ -35,26 +39,30 @@ public class Spider extends Movable{
 	 * object to stay in bounds
 	 */
 	@Override
-	public void move() {
-		Point oldLocation = getLocation();
-		int newHeading = getHeading() - (rand.nextInt(21) - 10);
-		setHeading(newHeading);
-		
-		double theta = Math.toRadians(90 - newHeading);
-		double deltaX = Math.cos(theta) * getSpeed();
-		double deltaY = Math.sin(theta) * getSpeed();
-		
-		float newX = oldLocation.getX() + (float) deltaX;
-		float newY = oldLocation.getY() + (float) deltaY;
-		
-		if(newX < 0 || newX > 1000 || newY < 0 || newY > 1000) {
-			setHeading(newHeading + 180);
-			
-			newX = Math.max(0, Math.min(1000, newX));
-			newY = Math.max(0, Math.min(1000, newY));
-		}
-		
-		setLocation(newX, newY);
+	public void move(int absolX, int absolY) {
+	    Point oldLocation = getLocation();
+	    int newHeading = getHeading() - (rand.nextInt(21) - 10);
+	    setHeading(newHeading);
+
+	    double theta = Math.toRadians(90 - newHeading);
+	    double deltaX = Math.cos(theta) * getSpeed();
+	    double deltaY = Math.sin(theta) * getSpeed();
+
+	    float newX = oldLocation.getX() + (float) deltaX;
+	    float newY = oldLocation.getY() + (float) deltaY;
+
+	    int absolSpiderX = (int) newX + absolX;
+	    int absolSpiderY = (int) newY + absolY;
+
+	    if (absolSpiderX < absolX || absolSpiderX > (absolX + 1000) || absolSpiderY < absolY || absolSpiderY > (absolY + 1000)) {
+	        	        
+	        setHeading(newHeading + 180);
+
+	        newX = Math.max(absolX, Math.min(absolX + 1000, absolSpiderX)) - absolX;
+	        newY = Math.max(absolY, Math.min(absolY + 1000, absolSpiderY)) - absolY;
+	    }
+
+	    setLocation(newX, newY);
 	}
 	
 	/*

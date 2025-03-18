@@ -1,14 +1,19 @@
 package com.mycompany.a2;
 
+import java.util.Random;
+
 import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
 
 public class FoodStation extends Fixed{
 
 	private int capacity;
+	private static Random rand = new Random();
+	private int size;
 	
-	public FoodStation(int size, Point location, int color) {
-		super(size, location, color);
+	public FoodStation(Point location) {
+		super(0, location, ColorUtil.rgb(0, 255, 0));
+		this.size = rand.nextInt(41) + 10;
 		this.capacity = size;
 	}
 

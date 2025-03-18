@@ -2,6 +2,9 @@ package com.mycompany.a2;
 
 import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
+import com.codename1.ui.Dialog;
+import com.codename1.ui.Display;
+
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -12,11 +15,13 @@ import java.util.Observable;
  */
 public class GameWorld extends Observable{
 	
-	private ArrayList<GameObject> gameObject;
+	private GameObjectCollection gameObjects;
 	private Random rand = new Random();
 	private int gameTick = 0;
 	private int playerLives = 3;
 	private boolean sound = false;
+	private int mvAbsolX = 0; 
+	private int mvAbsolY = 0;
 	
 	/*
 	 * Default constructor for GameWorld.
@@ -30,24 +35,29 @@ public class GameWorld extends Observable{
 	public void init() {		
 		
 		//Creates ArrayList<> for all game objects to be stored
-		gameObject = new ArrayList<>();
+		gameObjects = new GameObjectCollection();
 		
 		//Creates 4 flags and assigns size of 25, predefined locations, color blue, and sequence numbers accordingly
-		gameObject.add(new Flag(25, new Point(100,100), ColorUtil.rgb(0, 0, 255), 1));
-		gameObject.add(new Flag(25, new Point(900,100), ColorUtil.rgb(0, 0, 255), 2));
-		gameObject.add(new Flag(25, new Point(100,900), ColorUtil.rgb(0, 0, 255), 3));
-		gameObject.add(new Flag(25, new Point(900,900), ColorUtil.rgb(0, 0, 255), 4));
+		gameObjects.add(new Flag(new Point(100,100), 1));
+		gameObjects.add(new Flag(new Point(900,100), 2));
+		gameObjects.add(new Flag(new Point(900,100), 3));
+		gameObjects.add(new Flag(new Point(900,100), 4));
 
-		//Create object Ant and assigns size of 25, predefined start location, color grey, heading direction of 0, speed of 1, and initial foodLevel 25
-		gameObject.add(new Ant(25, new Point(50, 50), ColorUtil.rgb(128,128,128), 0, 1, 25));
+		//Grabs instance of Ant, if it doesn't exist -> creates one in class.
+		gameObjects.add(Ant.getAnt());
 		
 		//Creates 2 Spiders with size 25, random location, color black, random heading, speed of 5, and foodLevel 100 (won't be using)
-		gameObject.add(new Spider(25, new Point(rand.nextInt(1000), rand.nextInt(1000)), ColorUtil.rgb(255, 255, 255), rand.nextInt(360), 5, 100));
-		gameObject.add(new Spider(25, new Point(rand.nextInt(1000), rand.nextInt(1000)), ColorUtil.rgb(255, 255, 255), rand.nextInt(360), 5, 100));
+		gameObjects.add(new Spider(new Point(rand.nextInt(1000), rand.nextInt(1000)), getAbsolX(), getAbsolY()));
+		gameObjects.add(new Spider(new Point(rand.nextInt(1000), rand.nextInt(1000)), getAbsolX(), getAbsolY()));
 		
 		//Creates 2 FoodStations with random size, random location, color green, capacity is proportional to size so it will be set in the class
-		gameObject.add(new FoodStation(rand.nextInt(41) + 10, new Point(rand.nextInt(1000), rand.nextInt(1000)), ColorUtil.rgb(0, 255, 0)));
-		gameObject.add(new FoodStation(rand.nextInt(41) + 10, new Point(rand.nextInt(1000), rand.nextInt(1000)), ColorUtil.rgb(0, 255, 0)));
+		gameObjects.add(new FoodStation(new Point(rand.nextInt(1000), rand.nextInt(1000))));
+		gameObjects.add(new FoodStation(new Point(rand.nextInt(1000), rand.nextInt(1000))));
+		
+		}
+	
+	public IIterator getIterator() {
+		return gameObjects.getIterator();
 	}
 	
 	/*
@@ -80,40 +90,64 @@ public class GameWorld extends Observable{
 	
 	
 	public int getLastFlag() {
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant) {
-				return ((Ant) gameObject.get(i)).getLastFlagReached();
-			}
+		IIterator iterator = getIterator();
+		
+		while(iterator.hasNext()) {
+	        GameObject obj = (GameObject) iterator.getNext();
+	        
+	        if(obj instanceof Ant) {
+	        	return ((Ant) obj).getLastFlagReached();	
+	        }
 		}
 		return -1;
 	}
 	
 	public int getFoodLevel() {
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant) {
-				return ((Ant) gameObject.get(i)).getFoodLevel();
-			}
+		IIterator iterator = getIterator();
+		
+		while(iterator.hasNext()) {
+	        GameObject obj = (GameObject) iterator.getNext();
+	        
+	        if(obj instanceof Ant) {
+	        	return ((Ant) obj).getFoodLevel();	
+	        }
 		}
 		return -1;
 	}
 	
 	public int getHealthLevel() {
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant) {
-				return ((Ant) gameObject.get(i)).getHealthLevel();
-			}
+		IIterator iterator = getIterator();
+		
+		while(iterator.hasNext()) {
+	        GameObject obj = (GameObject) iterator.getNext();
+	        
+	        if(obj instanceof Ant) {
+	        	return ((Ant) obj).getHealthLevel();	
+	        }
 		}
 		return -1;
 	}
 	
-	public boolean getSound() {
-		return false;
+	public String getSound() {
+		if(sound == true) {
+			return "ON"; 
+		}else {
+			return "OFF";
+		}
+	
+	}
+		
+	public void setAbsolCords(int x, int y) {
+		this.mvAbsolX = x;
+		this.mvAbsolY = y;
 	}
 	
-	public void toggleSound() {
-		sound = !sound;
-		setChanged();
-		notifyObservers();
+	public int getAbsolX() {
+	    return mvAbsolX;
+	}
+
+	public int getAbsolY() {
+	    return mvAbsolY;
 	}
 	
 	/*
@@ -122,14 +156,20 @@ public class GameWorld extends Observable{
 	 */
 	public void accelerate() {
 		//Cycles through all game objects
-		for(int i = 0; i < gameObject.size(); i++) {
-			//Checks if the current gameObject is an Ant, if so proceeds
-			if(gameObject.get(i) instanceof Ant) {
-				//Accelerates Ant
-				((Ant) gameObject.get(i)).accelerate();
+		IIterator iterator = getIterator();
+		
+		while(iterator.hasNext()) {
+	        GameObject obj = (GameObject) iterator.getNext();
+	        
+	        if(obj instanceof Ant) {
+	        	((Ant) obj).accelerate();
 				System.out.println("Ant has sped up\n");
-			}
+
+	        }
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	/*
@@ -137,12 +177,20 @@ public class GameWorld extends Observable{
 	 * Looks for Ant object and calls on method
 	 */
 	public void brake() {
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant) {
-				((Ant) gameObject.get(i)).brake();
-				System.out.println("Ant has slowed down\n");
-			}
+		IIterator iterator = getIterator();
+		
+		while(iterator.hasNext()) {
+	        GameObject obj = (GameObject) iterator.getNext();
+	        
+	        if(obj instanceof Ant) {
+	        	((Ant) obj).brake();
+				System.out.println("Ant has slowed down\\n");
+
+	        }
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	/*
@@ -150,13 +198,19 @@ public class GameWorld extends Observable{
 	 * Looks for Ant object and calls on method
 	 */
 	public void turnLeft() {
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant) {
-				((Ant) gameObject.get(i)).turnLeft();	
-				System.out.println("Ant has turned left. Current heading: " + ((Ant) gameObject.get(i)).getHeading() + "\n");
-
-			}
+		IIterator iterator = getIterator();
+		
+		while(iterator.hasNext()) {
+	        GameObject obj = (GameObject) iterator.getNext();
+	        
+	        if(obj instanceof Ant) {
+	        	((Ant) obj).turnLeft();
+				System.out.println("Ant has turned left. Current heading: " + ((Ant) obj).getHeading() + "\n");
+	        }
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	/*
@@ -164,24 +218,38 @@ public class GameWorld extends Observable{
 	 * Looks for Ant object and calls on method
 	 */
 	public void turnRight() {
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant) {
-				((Ant) gameObject.get(i)).turnRight();
-				System.out.println("Ant has turned right. Current heading: " + ((Ant) gameObject.get(i)).getHeading() + "\n");
-			}
+		IIterator iterator = getIterator();
+		
+		while(iterator.hasNext()) {
+	        GameObject obj = (GameObject) iterator.getNext();
+	        
+	        if(obj instanceof Ant) {
+	        	((Ant) obj).turnRight();
+				System.out.println("Ant has turned right. Current heading: " + ((Ant) obj).getHeading() + "\n");
+	        }
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 	/*
 	 * Sets the consumption rate of Ant to a random value between 1-3
 	 */
 	public void consumptionRate() {
+		IIterator iterator = getIterator();
 		int randFood = rand.nextInt(3) + 1;
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant) {
-				((Ant) gameObject.get(i)).setFoodConsumption(randFood);
-				System.out.println("Ant's food set to: " + randFood);
-			}
+		
+		while(iterator.hasNext()) {
+	        GameObject obj = (GameObject) iterator.getNext();
+	        
+	        if(obj instanceof Ant) {
+	        	((Ant) obj).setFoodConsumption(randFood);
+				System.out.println("Ant's food set to: " + randFood + "\n");
+	        }
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	/*
@@ -189,18 +257,27 @@ public class GameWorld extends Observable{
 	 * return next flag needed to be reached
 	 */
 	public void flagCollision(int sequenceNumber) {
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant) {
-				((Ant) gameObject.get(i)).flagCollision(sequenceNumber);
-			}
-		}
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant && ((Ant) gameObject.get(i)).getLastFlagReached() == 4) {
-				System.out.println("Game over, you win! Total time: " + getGameTick());
-				System.exit(0);
-			}
+		IIterator iterator = getIterator();
+		
+		while(iterator.hasNext()) {
+	        GameObject obj = (GameObject) iterator.getNext();
+	        
+	        if(obj instanceof Ant) {
+	        	Ant ant = (Ant) obj;
+	        	ant.flagCollision(sequenceNumber);
+			
+	        	if(ant.getLastFlagReached() == 4) {
+	        		String gameFinished = "Game over, you win! Total time: " + getGameTick();
+	        		Dialog.show("Game Finished", gameFinished, "Ok", null );
+	        		System.out.println("Game over, you win! Total time: " + getGameTick());
+	        		Display.getInstance().exitApplication();
+				}
+	        }
 		}
 		
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	/*
@@ -214,25 +291,32 @@ public class GameWorld extends Observable{
 	    Ant ant = null;
 	    boolean foundNonEmpty = false;
 
-	    for (int i = 0; i < gameObject.size(); i++) {
-	        if (gameObject.get(i) instanceof Ant) {
-	            ant = (Ant) gameObject.get(i);
-	            break;
+		IIterator iterator = getIterator();
+		
+		while(iterator.hasNext()) {
+	        GameObject obj = (GameObject) iterator.getNext();
+	        
+	        if(obj instanceof Ant) {
+	        	ant = (Ant)obj;
 	        }
-	    }
-
-	    for (int i = 0; i < gameObject.size(); i++) {
-	        if (gameObject.get(i) instanceof FoodStation) {
-	            FoodStation station = (FoodStation) gameObject.get(i);
-
-	            if (station.getCapacity() > 0) {
-	                foodStationFood = station.getCapacity();
-	                station.setCapacity();
-	                foundNonEmpty = true;
-	                break;
-	            }
+		}
+		
+		IIterator iterator2 = getIterator();
+		
+		while(iterator2.hasNext()) {
+	        GameObject obj = (GameObject) iterator2.getNext();
+	        
+	        if(obj instanceof FoodStation) {
+	        	FoodStation station = (FoodStation)obj;
+	        
+            if (station.getCapacity() > 0) {
+                foodStationFood = station.getCapacity();
+                station.setCapacity();
+                foundNonEmpty = true;
+                break;
+            	}
 	        }
-	    }
+		}
 
 	    if (foundNonEmpty) {
 	        ant.foodStationCollision(foodStationFood);
@@ -240,6 +324,9 @@ public class GameWorld extends Observable{
 	    } else {
 	        System.out.println("All FoodStations have been collected.\n");
 	    }
+	    
+		setChanged();
+		notifyObservers();
 	}
 
 	/*
@@ -247,17 +334,25 @@ public class GameWorld extends Observable{
 	 */
 	public void spiderCollision() {
 		Ant ant = null;
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant) {
-	            ant = (Ant) gameObject.get(i);
-				ant.spiderCollision();
+		IIterator iterator = getIterator();
+		
+		while(iterator.hasNext()) {
+	        GameObject obj = (GameObject) iterator.getNext();
+	        
+	        if(obj instanceof Ant) {
+	        	ant = (Ant) obj;
+	        	ant.spiderCollision();
 				System.out.println("Ant has collided with Spider and lost health!\n");
 				break;
-			}
+	        }
 		}
-		if(ant != null && ant.getHealthLevel() <= 0) {
+
+		if(ant.getHealthLevel() <= 0) {
 			loseLife();
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	/*
@@ -266,64 +361,74 @@ public class GameWorld extends Observable{
 	 * Ant has stats adjusted. 
 	 */
 	public void tickedClock() {
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Spider) {
-				((Spider) gameObject.get(i)).move();
-			}
-		}
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant) {
-				Ant ant = (Ant) gameObject.get(i);
-				ant.move();
-				ant.setFoodConsumption(1);
-			if(ant.getFoodLevel() == 0) {
-				System.out.println("Food Level is 0, you lost a life. Map Reset.\n");
-				loseLife();
-			}
-		}
-	}
-		System.out.println("Game Clock has Ticked.\n");
+		
 		gameTick += 1;
-	}
-	
-	/*
-	 * Displays Ant's current stats
-	 */
-	public void showDisplay() {
-		for(int i = 0; i < gameObject.size(); i++) {
-			if(gameObject.get(i) instanceof Ant) {
-				Ant ant = ((Ant) gameObject.get(i));
-				System.out.println("Current Lives Left: " + getPlayerLives());
-				System.out.println("Current Elapsed Time: " + getGameTick());
-				System.out.println("Current Highest Flag Reached " + ant.getLastFlagReached());
-				System.out.println("Current Food Level: " + ant.getFoodLevel());
-				System.out.println("Current Health Level: " + ant.getHealthLevel() + "\n");
-			}
+		System.out.println("Game Clock has Ticked.\n");
+		
+		IIterator iterator = getIterator();
+		
+		while(iterator.hasNext()) {
+	        GameObject obj = (GameObject) iterator.getNext();
+	        
+	   
+	        if(obj instanceof Spider) {
+	        	((Spider) obj).move();
+	        }
 		}
-	}
-	
-	/*
-	 * Displays all objects location and their map stats
-	 */
-	public void showMap() {
-		for(int i = 0; i < gameObject.size(); i++) {
-			System.out.println(gameObject.get(i).toString());
+		
+		IIterator iterator2 = getIterator();
+		
+		while(iterator2.hasNext()) {
+	        GameObject obj = (GameObject) iterator2.getNext();
+	        
+	        if(obj instanceof Ant) {
+	        	Ant ant = (Ant) obj;
+	        	ant.move();
+	        	ant.setFoodConsumption(1);
+				if(ant.getFoodLevel() == 0) {
+					System.out.println("Food Level is 0, you lost a life. Map Reset.\n");
+					loseLife();
+				}
+	        }
 		}
-		System.out.println("\n");
+				
+		setChanged();
+		notifyObservers();
 	}
-	
+
 	/*
 	 * Reduces Ant's life by one. 
 	 * Ends game if no lives left
 	 */
 	public void loseLife() {		
+		
 		setPlayerLives(getPlayerLives() - 1);
 		System.out.println("Health Reduced, map reset!\n");
 		
 		if(getPlayerLives() == 0) {
-			System.out.println("Game over, you failed!”.");
+			Dialog.show("GAME OVER!", "Game over, you failed!", "Ok", null);
+			Display.getInstance().exitApplication();
 		}
 		
+		IIterator iterator = getIterator();
+		
+		while(iterator.hasNext()) {
+	        GameObject obj = (GameObject) iterator.getNext();
+	        
+	        if(obj instanceof Ant) {
+	        	((Ant) obj).resetAnt();
+	        }
+		}
 		init();
+		
+		setChanged();
+		notifyObservers();
+	}
+	
+	public void toggleSound() {
+		sound =! sound;
+		
+		setChanged();
+		notifyObservers();
 	}
 }
