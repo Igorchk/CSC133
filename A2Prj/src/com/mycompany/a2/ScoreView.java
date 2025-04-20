@@ -2,13 +2,11 @@ package com.mycompany.a2;
 
 import java.util.Observable;
 import java.util.Observer;
-import com.codename1.charts.util.ColorUtil;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
 import com.codename1.ui.Label;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
-import com.codename1.ui.plaf.Border;
 
 
 public class ScoreView extends Container implements Observer{
@@ -19,7 +17,6 @@ public class ScoreView extends Container implements Observer{
 	private Label foodLabel;
 	private Label healthLabel;
 	private Label soundLabel;
-    private Label titleLabel;
 	
 	public ScoreView(Observable myModel) { 
 		super();
@@ -55,6 +52,7 @@ public class ScoreView extends Container implements Observer{
 		
 		return label;
 	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
 	    if (o instanceof GameWorld) {

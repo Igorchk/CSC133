@@ -184,7 +184,7 @@ public class GameWorld extends Observable{
 	        
 	        if(obj instanceof Ant) {
 	        	((Ant) obj).brake();
-				System.out.println("Ant has slowed down\\n");
+				System.out.println("Ant has slowed down\n");
 
 	        }
 		}

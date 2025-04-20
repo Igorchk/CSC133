@@ -22,8 +22,7 @@ public class AboutCommand extends Command implements ActionListener{
 		
 		String text = "About:\n"
                 + "Name: Igor Romantsov\n"
-                + "Class: Object-Oriented Computer Graphics Programming\n"
-                + "Game Verison: 0.1.0";
+                + "Class: Object-Oriented Computer Graphics Programming\n";
 		
 		Dialog.show("Help", text,"Ok", null);
 		
